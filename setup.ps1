@@ -1,6 +1,11 @@
 # Install IIS
 Install-WindowsFeature -Name Web-Server
 
+# Install WMSVC
+Install-WindowsFeature -Name Web-Mgmt-Service
+# Enable remote connections
+Set-ItemProperty -Path  HKLM:\SOFTWARE\Microsoft\WebManagement\Server -Name EnableRemoteManagement -Value 1
+
 # Install WebDeploy
 $tempFile = [System.IO.Path]::GetTempFileName() |
     Rename-Item -NewName { $_ -replace 'tmp$', 'msi' } -PassThru

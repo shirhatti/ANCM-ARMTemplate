@@ -38,7 +38,7 @@
         "Standard_DS5_v2"
       ],
       "metadata": {
-        "description": "The Windows version for the VM. This will pick a fully patched image of this given Windows version. Allowed values: 2008-R2-SP1, 2012-Datacenter, 2012-R2-Datacenter."
+        "description": "The szie of the VM. See https://docs.microsoft.com/en-us/azure/virtual-machines/windows/sizes-general#dsv2-series for more details."
       }
     },
     "windowsOSVersion": {
