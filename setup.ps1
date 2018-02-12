@@ -30,19 +30,10 @@ Get-Content $logFile
 Stop-Service -Name W3SVC
 
 # Install nightly ANCM
-$tempFolder = [System.IO.Path]::GetTempFileName()
-Remove-Item $tempFolder
 $tempFile = [System.IO.Path]::GetTempFileName() |
-    Rename-Item -NewName { $_ -replace 'tmp$', 'zip' } -PassThru
-Add-Type -AssemblyName System.IO.Compression.FileSystem
-Invoke-WebRequest -Uri https://dotnet.myget.org/F/aspnetcore-dev/api/v2/package/Microsoft.AspNetCore.AspNetCoreModule/2.1.0-preview2-28189 -OutFile $tempFile
-[System.IO.Compression.ZipFile]::ExtractToDirectory($tempFile, $tempFolder)
-$schemaPath = Join-Path -Path $tempFolder -ChildPath "aspnetcore_schema.xml"
-Copy-Item -Path $schemaPath -Destination "C:\Windows\System32\inetsrv\Config\Schema\aspnetcore_schema.xml"
-$binaryPath64bit = Join-Path -Path $tempFolder -ChildPath "contentFiles\any\any\x64"
-$binaryPath32bit = Join-Path -Path $tempFolder -ChildPath "contentFiles\any\any\x86"
-Copy-Item -Path $binaryPath64bit\* -Destination C:\Windows\System32\inetsrv\ -Force 
-Copy-Item -Path $binaryPath32bit\* -Destination C:\Windows\SysWOW64\inetsrv\ -Force
+    Rename-Item -NewName { $_ -replace 'tmp$', 'ps1' } -PassThru
+Invoke-WebRequest -Uri https://raw.githubusercontent.com/shirhatti/ANCM-ARMTemplate/master/install-ancm.ps1 -OutFile $tempFile
+Invoke-Expression $tempFile
 
 # Start IIS
 Start-Service -Name W3SVC
@@ -52,3 +43,6 @@ Start-Service -Name WMSVC
 
 # Open port for WMSVC
 New-NetFirewallRule -DisplayName "WMSVC" -Direction Inbound  -Action Allow -Protocol TCP -LocalPort 8172
+
+# Reboot
+Restart-Computer
