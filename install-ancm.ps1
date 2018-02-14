@@ -13,8 +13,7 @@
     aspnetcorerh.dll
 .PARAMETER Version
     Default: latest
-    Represents a build version of the Microsoft.AspNetCore package on the
-    aspnetcore-dev feed. See https://dotnet.myget.org/feed/aspnetcore-dev/package/nuget/Microsoft.AspNetCore
+    Represents a build version of the Microsoft.AspNetCore.Asp package on the specified feed
 .PARAMETER Rollback
 #>
 
@@ -153,4 +152,4 @@ else {
 }
 
 Write-Host "Starting IIS"
-Stop-Service -Name W3SVC
+Start-Service -Name W3SVC
