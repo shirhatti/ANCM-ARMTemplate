@@ -44,5 +44,10 @@ Start-Service -Name WMSVC
 # Open port for WMSVC
 New-NetFirewallRule -DisplayName "WMSVC" -Direction Inbound  -Action Allow -Protocol TCP -LocalPort 8172
 
+# Add HTTPS binding
+$cert = (Get-ChildItem -Path Cert:\LocalMachine\My\) | Where-Object {$_.FriendlyName -like "*WMSvc*"}
+New-WebBinding -Name "Default Web Site" -Protocol "https" -Port 443 -HostHeader "*" 
+(Get-WebBinding -Name "Default Web Site" -Port "443").AddSslCertificate($cert.Thumbprint, "My")
+
 # Reboot
 Restart-Computer
