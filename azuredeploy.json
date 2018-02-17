@@ -94,6 +94,19 @@
       "properties": {
         "securityRules": [
           {
+            "name": "HTTPS",
+            "properties": {
+              "priority": 1030,
+              "sourceAddressPrefix": "*",
+              "protocol": "Tcp",
+              "destinationPortRange": "443",
+              "access": "Allow",
+              "direction": "Inbound",
+              "sourcePortRange": "*",
+              "destinationAddressPrefix": "*"
+            }
+          },
+          {
             "name": "WMSVC",
             "properties": {
               "priority": 1020,
