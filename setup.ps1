@@ -49,5 +49,14 @@ $cert = (Get-ChildItem -Path Cert:\LocalMachine\My\) | Where-Object {$_.Friendly
 New-WebBinding -Name "Default Web Site" -Protocol "https" -Port 443 -HostHeader "*" 
 (Get-WebBinding -Name "Default Web Site" -Port "443").AddSslCertificate($cert.Thumbprint, "My")
 
+# Grant IIS_IUSRS write permissions for wwwroot
+$path = "C:\inetpub\wwwroot"
+$ar = (Get-Acl -Path $path).Access.Where{$_.IdentityReference -eq "BUILTIN\IIS_IUSRS"}[0]
+$acl = (Get-Acl -Path $path)
+$acl.RemoveAccessRule($ar[0])
+$ar = New-Object System.Security.AccessControl.FileSystemAccessRule("BUILTIN\IIS_IUSRS", "Write, ReadAndExecute, Synchronize", "ContainerInherit, ObjectInherit", "None", "Allow")
+$acl.AddAccessRule($ar)
+Set-Acl -Path $path $acl
+
 # Reboot
 Restart-Computer
