@@ -29,7 +29,7 @@ $ProgressPreference="SilentlyContinue"
 $timeStamp = Get-Date -f MM-dd-yyyy_HH_mm_ss
 
 function Get-LatestVersion() {
-    return (Invoke-RestMethod -Uri https://dotnet.myget.org/F/aspnetcore-dev/api/v3/registration1/microsoft.aspnetcore.aspnetcoremodule/index.json).items[-1].upper
+    return (Invoke-RestMethod -Uri https://api.nuget.org/v3/registration3/microsoft.aspnetcore.aspnetcoremodule/index.json).items[-1].upper
 }
 
 function Get-SpecificVersion([string]$Version) {
@@ -105,7 +105,7 @@ function Invoke-UpdateANCM ($Version) {
     Remove-Item $tempFolder
     $tempFile = [System.IO.Path]::GetTempFileName() |
         Rename-Item -NewName { $_ -replace 'tmp$', 'zip' } -PassThru
-    $nupkgPath = "https://dotnet.myget.org/F/aspnetcore-dev/api/v2/package/Microsoft.AspNetCore.AspNetCoreModule/" + $Version
+    $nupkgPath = "https://www.nuget.org/packages/Microsoft.AspNetCore.AspNetCoreModule/" + $Version
     Invoke-WebRequest -Uri $nupkgPath -OutFile $tempFile
     
     Add-Type -AssemblyName System.IO.Compression.FileSystem
