@@ -20,7 +20,7 @@ Set-Service -Name WMSVC -StartupType Automatic
 # Install Server hosting bundle
 $tempFile = [System.IO.Path]::GetTempFileName() |
     Rename-Item -NewName { $_ -replace 'tmp$', 'exe' } -PassThru
-Invoke-WebRequest -Uri https://download.microsoft.com/download/1/1/0/11046135-4207-40D3-A795-13ECEA741B32/DotNetCore.2.0.5-WindowsHosting.exe -OutFile $tempFile
+Invoke-WebRequest -Uri https://download.microsoft.com/download/A/B/1/AB1AA972-8F2F-43AD-9A81-72E9245CB0F5/dotnet-hosting-2.1.0-preview1-final-win.exe -OutFile $tempFile
 $logFile = [System.IO.Path]::GetTempFileName()
 $proc = (Start-Process $tempFile -PassThru "/quiet /install /log $logFile")
 $proc | Wait-Process
