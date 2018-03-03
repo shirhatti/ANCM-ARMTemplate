@@ -101,13 +101,15 @@ function Test-ANCMExists()
 }
 
 function Invoke-UpdateANCM ($Version) {
-    $tempFolder = [System.IO.Path]::GetTempFileName()
+    $tempFolderName = [System.IO.Path]::GetFileNameWithoutExtension([System.IO.Path]::GetTempFileName())
+    $tempFolder = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath() ,$tempFolderName)
+    [System.IO.Directory]::CreateDirectory($tempFolder)
     Remove-Item $tempFolder
     $tempFile = [System.IO.Path]::GetTempFileName() |
         Rename-Item -NewName { $_ -replace 'tmp$', 'zip' } -PassThru
-    $nupkgPath = "https://www.nuget.org/packages/Microsoft.AspNetCore.AspNetCoreModule/" + $Version
+    $nupkgPath = "https://www.nuget.org/api/v2/package/Microsoft.AspNetCore.AspNetCoreModule/" + $Version
     Invoke-WebRequest -Uri $nupkgPath -OutFile $tempFile
-    
+    Write-Host "Extracting from '$tempFile' to '$tempFolder'"
     Add-Type -AssemblyName System.IO.Compression.FileSystem
     [System.IO.Compression.ZipFile]::ExtractToDirectory($tempFile, $tempFolder)
     $schemaPath = Join-Path -Path $tempFolder -ChildPath "aspnetcore_schema.xml"
